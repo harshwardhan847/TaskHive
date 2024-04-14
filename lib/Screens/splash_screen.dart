@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:task_hive/Pages/home_page.dart';
+import 'package:task_hive/Screens/home_screen.dart';
+import 'package:task_hive/Screens/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -20,8 +21,8 @@ class _SplashScreenState extends State<SplashScreen> {
     //to remove top and bottom bars while splash screen is shown
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const HomePage()));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
     });
   }
 
@@ -41,6 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
       //   title: const Text('Flutter Demo Home Page'),
       // ),
       body: Center(
+        
         child: Image.asset('assets/images/Logo.png'),
       ),
     );
