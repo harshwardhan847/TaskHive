@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:task_hive/Screens/home_screen.dart';
 import 'package:task_hive/Screens/login_screen.dart';
+import 'package:task_hive/Screens/sign_up_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -42,7 +43,6 @@ class _SplashScreenState extends State<SplashScreen> {
       //   title: const Text('Flutter Demo Home Page'),
       // ),
       body: Center(
-        
         child: Image.asset('assets/images/Logo.png'),
       ),
     );
