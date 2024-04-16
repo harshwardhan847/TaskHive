@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class MyElevatedButton extends StatelessWidget {
+  MyElevatedButton({super.key, this.text = "", this.onPressed});
   final String text;
-  const MyElevatedButton({super.key, this.text = ""});
-
+  void Function()? onPressed;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -17,7 +17,7 @@ class MyElevatedButton extends StatelessWidget {
               )),
               padding: MaterialStateProperty.all(
                   const EdgeInsets.fromLTRB(20, 10, 20, 10))),
-          onPressed: () {},
+          onPressed: onPressed,
           child: Text(
             text,
             style: const TextStyle(fontSize: 20, color: Colors.white),

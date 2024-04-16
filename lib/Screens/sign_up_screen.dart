@@ -63,7 +63,10 @@ class SignUpScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                const MyElevatedButton(
+                 MyElevatedButton(
+                  onPressed: () {
+                    print("Sign up");
+                  },
                   text: "Sign up",
                 ),
                 const Row(

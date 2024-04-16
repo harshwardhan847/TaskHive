@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -15,6 +17,20 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  Widget getScreenByAuth() {
+    bool isLogged = false;
+    auth.authStateChanges().listen((User? user) {
+      if (user == null) {
+        isLogged = false;
+      } else {
+        isLogged = true;
+      }
+    });
+    return isLogged ? HomePage() : LoginScreen();
+  }
+
   //runs first while loading screen
   @override
   void initState() {
@@ -22,8 +38,8 @@ class _SplashScreenState extends State<SplashScreen> {
     //to remove top and bottom bars while splash screen is shown
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => getScreenByAuth()));
     });
   }
 

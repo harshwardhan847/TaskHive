@@ -4,26 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:task_hive/Colors/colors.dart';
 
-class MyTextInput extends StatefulWidget {
+class MyTextInput extends StatelessWidget {
   final String hintText;
+  final String value;
+  final TextEditingController? controller;
   const MyTextInput({
     super.key,
     required this.hintText,
+    this.value = '',
+    this.controller,
   });
 
   @override
-  State<MyTextInput> createState() => _MyTextInputState();
-}
-
-class _MyTextInputState extends State<MyTextInput> {
-  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      style: TextStyle(color: MyColors.primary),
+      controller: controller,
+      style: const TextStyle(color: MyColors.primary),
       decoration: InputDecoration(
         fillColor: MyColors.secondary,
         filled: true,
-        hintText: widget.hintText,
+        hintText: hintText,
         hintStyle: const TextStyle(
             color: MyColors.primaryDull, fontWeight: FontWeight.w400),
         border: const OutlineInputBorder(
