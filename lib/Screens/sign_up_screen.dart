@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:task_hive/Components/elevated_button.dart';
 import 'package:task_hive/Components/text_button.dart';
 import 'package:task_hive/Components/text_input.dart';
+import 'package:task_hive/Screens/login_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -54,26 +55,30 @@ class SignUpScreen extends StatelessWidget {
                 const MyTextInput(
                   hintText: "Confirm Password",
                 ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: const MyTextButton(
-                    text: "Forgot password?",
-                  ),
-                ),
+                // Container(
+                //   alignment: Alignment.centerRight,
+                //   child: const MyTextButton(
+                //     text: "Forgot password?",
+                //   ),
+                // ),
                 const SizedBox(
                   height: 20,
                 ),
-                 MyElevatedButton(
-                  onPressed: () {
-                    print("Sign up");
-                  },
+                MyElevatedButton(
+                  onPressed: () {},
                   text: "Sign up",
                 ),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text("Already have an account?"),
                     MyTextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginScreen()));
+                      },
                       text: "Sign in",
                     )
                   ],

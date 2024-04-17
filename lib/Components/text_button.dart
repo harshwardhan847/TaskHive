@@ -4,7 +4,8 @@ import 'package:task_hive/Colors/colors.dart';
 
 class MyTextButton extends StatelessWidget {
   final String text;
-  const MyTextButton({super.key, this.text = ""});
+  final void Function()? onPressed;
+  const MyTextButton({super.key, this.text = "", this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +14,7 @@ class MyTextButton extends StatelessWidget {
           // backgroundColor: MaterialStatePropertyAll(Colors.redAccent),
           // padding: MaterialStateProperty.all(const EdgeInsets.all(4)),
           foregroundColor: MaterialStateProperty.all(MyColors.secondary)),
-      onPressed: () {
-        print('MyTextButton was pressed');
-      },
+      onPressed: onPressed,
       child: Text(text),
     );
   }

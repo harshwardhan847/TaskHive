@@ -4,6 +4,7 @@ import 'package:task_hive/Components/elevated_button.dart';
 import 'package:task_hive/Components/text_button.dart';
 import 'package:task_hive/Components/text_input.dart';
 import 'package:task_hive/Screens/home_screen.dart';
+import 'package:task_hive/Screens/sign_up_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -73,11 +74,17 @@ class LoginScreen extends StatelessWidget {
               },
               text: "Sign in",
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 const Text("Don't have an account?"),
-                const MyTextButton(
+                MyTextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SignUpScreen()));
+                  },
                   text: "Sign up",
                 )
               ],
