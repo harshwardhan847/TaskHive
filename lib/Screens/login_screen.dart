@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:task_hive/Components/elevated_button.dart';
 import 'package:task_hive/Components/text_button.dart';
 import 'package:task_hive/Components/text_input.dart';
@@ -9,8 +10,17 @@ import 'package:task_hive/Screens/sign_up_screen.dart';
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
   void Login(context, email, password) async {
+    Loader.show(
+      context,
+      isSafeAreaOverlay: false,
+      isBottomBarOverlay: false,
+      overlayFromBottom: 80,
+      overlayColor: Colors.black26,
+      progressIndicator:
+          const CircularProgressIndicator(backgroundColor: Colors.transparent),
+    );
     try {
-      final credential = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomePage()));
@@ -20,6 +30,8 @@ class LoginScreen extends StatelessWidget {
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
       }
+    } finally {
+      Loader.hide();
     }
   }
 
