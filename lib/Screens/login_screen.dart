@@ -25,8 +25,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController EmailController = new TextEditingController();
-    TextEditingController PasswordController = new TextEditingController();
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
     return Scaffold(
       body: Container(
         margin: const EdgeInsets.all(16),
@@ -50,14 +50,14 @@ class LoginScreen extends StatelessWidget {
             ),
             MyTextInput(
               hintText: "Email",
-              controller: EmailController,
+              controller: emailController,
             ),
             const SizedBox(
               height: 20,
             ),
             MyTextInput(
               hintText: "Password",
-              controller: PasswordController,
+              controller: passwordController,
             ),
             Container(
               alignment: Alignment.centerRight,
@@ -70,7 +70,7 @@ class LoginScreen extends StatelessWidget {
             ),
             MyElevatedButton(
               onPressed: () {
-                Login(context, EmailController.text, PasswordController.text);
+                Login(context, emailController.text, passwordController.text);
               },
               text: "Sign in",
             ),
@@ -83,7 +83,7 @@ class LoginScreen extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>  SignUpScreen()));
+                            builder: (context) => SignUpScreen()));
                   },
                   text: "Sign up",
                 )
