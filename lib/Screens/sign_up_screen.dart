@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:task_hive/Components/elevated_button.dart';
 import 'package:task_hive/Components/text_button.dart';
@@ -6,10 +9,29 @@ import 'package:task_hive/Components/text_input.dart';
 import 'package:task_hive/Screens/login_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+  SignUpScreen({super.key});
+  FirebaseFirestore db = FirebaseFirestore.instance;
+
+  void SignUp(String name, String email, String password) async {
+    try {
+      final newUserCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      final userId = newUserCredential.user!.uid;
+      final user = <String, dynamic>{
+        "first": name,
+      };
+      await db.collection("users").doc(userId).set(user);
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController nameController = new TextEditingController();
+    TextEditingController emailController = new TextEditingController();
+    TextEditingController passwordController = new TextEditingController();
+
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -34,20 +56,23 @@ class SignUpScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                const MyTextInput(
+                MyTextInput(
                   hintText: "Name",
+                  controller: nameController,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                const MyTextInput(
+                MyTextInput(
                   hintText: "Email",
+                  controller: emailController,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                const MyTextInput(
+                MyTextInput(
                   hintText: "Password",
+                  controller: passwordController,
                 ),
                 const SizedBox(
                   height: 20,
@@ -65,7 +90,10 @@ class SignUpScreen extends StatelessWidget {
                   height: 20,
                 ),
                 MyElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    SignUp(nameController.text, emailController.text,
+                        passwordController.text);
+                  },
                   text: "Sign up",
                 ),
                 Row(
