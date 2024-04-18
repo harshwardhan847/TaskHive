@@ -29,6 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void signUp(String name, String email, String password) async {
+    String errorMessage;
     Loader.show(
       context,
       isSafeAreaOverlay: false,
@@ -38,6 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       progressIndicator:
           const CircularProgressIndicator(backgroundColor: Colors.transparent),
     );
+
     try {
       final newUserCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
@@ -47,14 +49,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       };
       await db.collection("users").doc(userId).set(user);
       // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()));
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      } else if (e.code == "") {}
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => LoginScreen()));
+    } on FirebaseAuthException catch (error) {
+      print(error);
     } finally {
       Loader.hide();
     }
@@ -135,7 +133,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LoginScreen()));
+                                builder: (context) => LoginScreen()));
                       },
                       text: "Sign in",
                     )

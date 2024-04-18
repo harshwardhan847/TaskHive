@@ -27,10 +27,8 @@ class HomePage extends StatelessWidget {
                 text: "Log Out",
                 onPressed: () {
                   FirebaseAuth.instance.signOut();
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginScreen()));
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()));
                 })
           ],
         ),
