@@ -19,16 +19,24 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  Widget getScreenByAuth() {
-    bool isLogged = false;
-    auth.authStateChanges().listen((User? user) {
+  void getScreenByAuth() async {
+    bool logged = false;
+    await auth.authStateChanges().map((User? user) {
       if (user == null) {
-        isLogged = false;
+        logged = false;
       } else {
-        isLogged = true;
+        logged = true;
       }
-    });
-    return isLogged ? HomePage() : LoginScreen();
+    }).first;
+    Future.delayed(
+        const Duration(seconds: 2),
+        () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    logged ? const HomePage() : const LoginScreen(),
+              ),
+            ));
   }
 
   //runs first while loading screen
@@ -37,10 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     //to remove top and bottom bars while splash screen is shown
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => getScreenByAuth()));
-    });
+    getScreenByAuth();
   }
 
   //cleanup function

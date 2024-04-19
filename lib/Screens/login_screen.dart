@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
+          context, MaterialPageRoute(builder: (context) => const HomePage()));
     } on FirebaseAuthException catch (error) {
       setState(() {
         firebaseError = getError(error);
@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String getError(err) {
-    return err.code;
+    return err.message;
   }
 
   @override
@@ -58,95 +58,100 @@ class _LoginScreenState extends State<LoginScreen> {
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
     return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.all(16),
-        width: double.infinity,
-        child: Form(
-          key: _form,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "Log In",
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 50),
-              ),
-              const SizedBox(
-                height: 60,
-              ),
-              const Text(
-                "Hello, Welcome Back!",
-                style:
-                    TextStyle(fontSize: 18, wordSpacing: 1, letterSpacing: 1),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              MyTextInput(
-                hintText: "Email",
-                controller: emailController,
-                validator: (val) {
-                  if (val == null || val.isEmpty) {
-                    return "Please enter your email.";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              MyTextInput(
-                hintText: "Password",
-                controller: passwordController,
-                validator: (val) {
-                  if (val == null || val.isEmpty) {
-                    return "Please enter your password.";
-                  }
-                  return null;
-                },
-              ),
-              firebaseError.isNotEmpty
-                  ? Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        firebaseError,
-                        style: TextStyle(
-                          color: Colors.red.shade700,
-                        ),
-                      ),
-                    )
-                  : const SizedBox(),
-              Container(
-                alignment: Alignment.centerRight,
-                child: const MyTextButton(
-                  text: "Forgot password?",
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              MyElevatedButton(
-                onPressed: () {
-                  saveForm(
-                      context, emailController.text, passwordController.text);
-                },
-                text: "Sign in",
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+      resizeToAvoidBottomInset: true,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            margin: const EdgeInsets.all(16),
+            width: double.infinity,
+            child: Form(
+              key: _form,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account?"),
-                  MyTextButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SignUpScreen()));
+                  const Text(
+                    "Log In",
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 50),
+                  ),
+                  const SizedBox(
+                    height: 60,
+                  ),
+                  const Text(
+                    "Hello, Welcome Back!",
+                    style: TextStyle(
+                        fontSize: 18, wordSpacing: 1, letterSpacing: 1),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  MyTextInput(
+                    hintText: "Email",
+                    controller: emailController,
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        return "Please enter your email.";
+                      }
+                      return null;
                     },
-                    text: "Sign up",
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  MyTextInput(
+                    hintText: "Password",
+                    controller: passwordController,
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        return "Please enter your password.";
+                      }
+                      return null;
+                    },
+                  ),
+                  firebaseError.isNotEmpty
+                      ? Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            firebaseError,
+                            style: TextStyle(
+                              color: Colors.red.shade700,
+                            ),
+                          ),
+                        )
+                      : const SizedBox(),
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: const MyTextButton(
+                      text: "Forgot password?",
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  MyElevatedButton(
+                    onPressed: () {
+                      saveForm(context, emailController.text,
+                          passwordController.text);
+                    },
+                    text: "Sign in",
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Text("Don't have an account?"),
+                      MyTextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SignUpScreen()));
+                        },
+                        text: "Sign up",
+                      )
+                    ],
                   )
                 ],
-              )
-            ],
+              ),
+            ),
           ),
         ),
       ),

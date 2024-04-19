@@ -10,6 +10,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   runApp(const MainApp());
 }
 
@@ -19,7 +21,6 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      
       theme: ThemeData(
         colorScheme: const ColorScheme(
             error: Colors.redAccent,
@@ -36,7 +37,6 @@ class MainApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
-      
     );
   }
 }

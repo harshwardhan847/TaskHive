@@ -18,6 +18,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final _form = GlobalKey<FormState>();
   FirebaseFirestore db = FirebaseFirestore.instance;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -29,7 +30,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void signUp(String name, String email, String password) async {
-    String errorMessage;
+    final isValid = _form.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
     Loader.show(
       context,
       isSafeAreaOverlay: false,
@@ -63,83 +67,115 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.all(30),
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Sign Up",
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 50),
-                ),
-                const SizedBox(
-                  height: 60,
-                ),
-                const Text(
-                  "Just a few quick things to get started",
-                  style:
-                      TextStyle(fontSize: 18, wordSpacing: 1, letterSpacing: 1),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                MyTextInput(
-                  hintText: "Name",
-                  controller: nameController,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                MyTextInput(
-                  hintText: "Email",
-                  controller: emailController,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                MyTextInput(
-                  hintText: "Password",
-                  controller: passwordController,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const MyTextInput(
-                  hintText: "Confirm Password",
-                ),
-                // Container(
-                //   alignment: Alignment.centerRight,
-                //   child: const MyTextButton(
-                //     text: "Forgot password?",
-                //   ),
-                // ),
-                const SizedBox(
-                  height: 20,
-                ),
-                MyElevatedButton(
-                  onPressed: () {
-                    signUp(nameController.text, emailController.text,
-                        passwordController.text);
-                  },
-                  text: "Sign up",
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const Text("Already have an account?"),
-                    MyTextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
-                      },
-                      text: "Sign in",
-                    )
-                  ],
-                )
-              ],
+          child: Form(
+            key: _form,
+            child: Container(
+              margin: const EdgeInsets.all(30),
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Sign Up",
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 50),
+                  ),
+                  const SizedBox(
+                    height: 60,
+                  ),
+                  const Text(
+                    "Just a few quick things to get started",
+                    style: TextStyle(
+                        fontSize: 18, wordSpacing: 1, letterSpacing: 1),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  MyTextInput(
+                    hintText: "Name",
+                    controller: nameController,
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        return "Please enter your name.";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  MyTextInput(
+                    hintText: "Email",
+                    controller: emailController,
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        return "Please enter your email.";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  MyTextInput(
+                    hintText: "Password",
+                    controller: passwordController,
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        return "Please enter your password.";
+                      } else if (val.length < 6) {
+                        return "Password must be at least 6 characters.";
+                      }
+
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  MyTextInput(
+                    hintText: "Confirm Password",
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        return "Please confirm your password.";
+                      } else if (val != passwordController.text) {
+                        return "Passwords don't match.";
+                      }
+                      return null;
+                    },
+                  ),
+                  // Container(
+                  //   alignment: Alignment.centerRight,
+                  //   child: const MyTextButton(
+                  //     text: "Forgot password?",
+                  //   ),
+                  // ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  MyElevatedButton(
+                    onPressed: () {
+                      signUp(nameController.text, emailController.text,
+                          passwordController.text);
+                    },
+                    text: "Sign up",
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Text("Already have an account?"),
+                      MyTextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginScreen()));
+                        },
+                        text: "Sign in",
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
