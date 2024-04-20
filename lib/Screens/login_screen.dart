@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:task_hive/Colors/colors.dart';
 import 'package:task_hive/Components/elevated_button.dart';
 import 'package:task_hive/Components/text_button.dart';
 import 'package:task_hive/Components/text_input.dart';
@@ -58,6 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
     return Scaffold(
+      backgroundColor: MyColors.primary,
       resizeToAvoidBottomInset: true,
       body: Center(
         child: SingleChildScrollView(

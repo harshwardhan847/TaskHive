@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:task_hive/Colors/colors.dart';
 import 'package:task_hive/Screens/home_screen.dart';
 import 'package:task_hive/Screens/login_screen.dart';
 import 'package:task_hive/Screens/sign_up_screen.dart';
@@ -59,6 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.primary,
       // appBar: AppBar(
       //   backgroundColor: Colors.transparent,
       //   title: const Text('Flutter Demo Home Page'),

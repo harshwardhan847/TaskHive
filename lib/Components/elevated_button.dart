@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:task_hive/Colors/colors.dart';
 
 class MyElevatedButton extends StatelessWidget {
   MyElevatedButton({super.key, this.text = "", this.onPressed});
@@ -11,6 +12,7 @@ class MyElevatedButton extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
           style: ButtonStyle(
+              backgroundColor: MaterialStatePropertyAll(MyColors.secondary),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
