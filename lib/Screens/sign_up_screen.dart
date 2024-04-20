@@ -51,7 +51,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final user = <String, dynamic>{
         "name": name,
       };
-      await db.collection("users").doc(userId).set(user);
+      await FirebaseAuth.instance.currentUser!.updateDisplayName(name);
+      // await db.collection("users").doc(userId).set(user);
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LoginScreen()));
