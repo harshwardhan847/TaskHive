@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,6 +10,10 @@ import 'package:task_hive/Components/TodoCard.dart';
 import 'package:task_hive/Components/elevated_button.dart';
 import 'package:task_hive/Components/text_button.dart';
 import 'package:task_hive/Screens/login_screen.dart';
+import 'package:task_hive/Tabs/HomeTab.dart';
+import 'package:task_hive/Tabs/ProfileTab.dart';
+import 'package:task_hive/Tabs/StatsTab.dart';
+import 'package:task_hive/Tabs/TasksTab.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,13 +22,28 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  final Tween<double> turnsTween = Tween<double>(
+    begin: 1,
+    end: 0,
+  );
+
+  int tab = 0;
+  @override
+  void initState() {
+    super.initState();
+    tab = 0;
+  }
+
+  List<Widget> tabs = [
+    const HomeTab(),
+    const TasksTab(),
+    const StatsTab(),
+    const ProfileTab(),
+  ];
   @override
   Widget build(BuildContext context) {
-    String? getUserName() {
-      return FirebaseAuth.instance.currentUser?.displayName;
-    }
-
+    
     return Scaffold(
       floatingActionButton: SizedBox(
         width: 70,
@@ -49,25 +69,41 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             BottomNavigationButton(
-              icon: Icons.home_outlined,
-              text: "Home",
-              active: true,
-            ),
+                icon: Icons.home_outlined,
+                text: "Home",
+                active: tab == 0,
+                onPressed: () {
+                  setState(() {
+                    tab = 0;
+                  });
+                }),
             BottomNavigationButton(
-              icon: Icons.task_alt_outlined,
-              text: "Tasks",
-              active: false,
-            ),
+                icon: Icons.task_alt_outlined,
+                text: "Tasks",
+                active: tab == 1,
+                onPressed: () {
+                  setState(() {
+                    tab = 1;
+                  });
+                }),
             BottomNavigationButton(
-              icon: Icons.bar_chart_outlined,
-              text: "Stats",
-              active: false,
-            ),
+                icon: Icons.bar_chart_outlined,
+                text: "Stats",
+                active: tab == 2,
+                onPressed: () {
+                  setState(() {
+                    tab = 2;
+                  });
+                }),
             BottomNavigationButton(
-              icon: Icons.supervised_user_circle_outlined,
-              text: "Profile",
-              active: false,
-            )
+                icon: Icons.supervised_user_circle_outlined,
+                text: "Profile",
+                active: tab == 3,
+                onPressed: () {
+                  setState(() {
+                    tab = 3;
+                  });
+                })
           ],
         ),
       ),
@@ -92,47 +128,18 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       backgroundColor: MyColors.secondary,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Welcome ${getUserName() ?? ''}!',
-                style: const TextStyle(
-                    color: MyColors.primary,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w700),
-                textAlign: TextAlign.start,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 35,
-                child: ListView.separated(
-                  separatorBuilder: (context, index) => const SizedBox(
-                    width: 10,
-                  ),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 10,
-                  itemBuilder: (context, index) => FilterButton(
-                    text: "Completed",
-                    onPressed: () {},
-                    number: index + 1,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              ...List.generate(20, (index) => const TodoCard()),
-            ],
-          ),
-        ),
+      body: AnimatedSwitcher(
+        transitionBuilder: (child, animation) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        },
+        duration: const Duration(milliseconds: 100),
+        child: tabs[tab],
       ),
     );
   }

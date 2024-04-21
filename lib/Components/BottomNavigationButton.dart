@@ -7,11 +7,13 @@ class BottomNavigationButton extends StatelessWidget {
   bool active;
   IconData icon;
   String text;
+  void Function()? onPressed;
   BottomNavigationButton(
       {super.key,
       required this.active,
       required this.icon,
-      required this.text});
+      required this.text,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class BottomNavigationButton extends StatelessWidget {
           )),
           padding: MaterialStateProperty.all(
               const EdgeInsets.fromLTRB(20, 10, 20, 10))),
-      onPressed: () {},
+      onPressed: onPressed,
       child: Row(
         children: [
           Icon(
