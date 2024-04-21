@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:task_hive/Colors/colors.dart';
 import 'package:task_hive/Components/FilterButton.dart';
@@ -9,6 +10,7 @@ class HomeTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Tween listTween = Tween(begin: 0, end: 1);
     String? getUserName() {
       return FirebaseAuth.instance.currentUser?.displayName;
     }
@@ -50,7 +52,17 @@ class HomeTab extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            ...List.generate(20, (index) => const TodoCard()),
+            Container(
+              padding: EdgeInsets.only(bottom: 70),
+              width: double.infinity,
+              height: 800,
+              child: AnimatedList(
+                  initialItemCount: 10,
+                  itemBuilder: (context, index, animation) {
+                    return FadeTransition(
+                        opacity: animation, child: const TodoCard());
+                  }),
+            ),
           ],
         ),
       ),
