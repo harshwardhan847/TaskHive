@@ -3,10 +3,12 @@ import 'package:flutter/widgets.dart';
 import 'package:task_hive/Colors/colors.dart';
 
 class TodoCard extends StatelessWidget {
-  const TodoCard({super.key});
+  Map<String, dynamic> todo = {};
+  TodoCard({super.key, required this.todo});
 
   @override
   Widget build(BuildContext context) {
+    var title = todo['title'] as String;
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(10),
@@ -20,7 +22,7 @@ class TodoCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text("Dashboard design for admin",
+              Text(title,
                   style: TextStyle(
                       color: MyColors.secondary, fontWeight: FontWeight.w600)),
               SizedBox(
