@@ -13,6 +13,7 @@ class MyTextInput extends StatelessWidget {
   final void Function()? onTap;
   final Widget? prefixIcon;
   final bool readOnly;
+  final TextInputType keyboardType;
   const MyTextInput(
       {super.key,
       required this.hintText,
@@ -22,6 +23,7 @@ class MyTextInput extends StatelessWidget {
       this.onTap,
       this.prefixIcon,
       this.readOnly = false,
+      this.keyboardType = TextInputType.text,
       this.validator});
 
   @override
@@ -29,6 +31,7 @@ class MyTextInput extends StatelessWidget {
     return TextFormField(
       validator: validator,
       cursorColor: MyColors.primary,
+      keyboardType: keyboardType,
       readOnly: readOnly,
       onTap: onTap,
       controller: controller,

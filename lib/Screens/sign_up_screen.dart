@@ -19,7 +19,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _form = GlobalKey<FormState>();
-  FirebaseFirestore db = FirebaseFirestore.instance;
+  // FirebaseFirestore db = FirebaseFirestore.instance;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
