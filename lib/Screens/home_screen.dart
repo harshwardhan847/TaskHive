@@ -9,6 +9,7 @@ import 'package:task_hive/Components/FilterButton.dart';
 import 'package:task_hive/Components/TodoCard.dart';
 import 'package:task_hive/Components/elevated_button.dart';
 import 'package:task_hive/Components/text_button.dart';
+import 'package:task_hive/Screens/add_todo_screen.dart';
 import 'package:task_hive/Screens/login_screen.dart';
 import 'package:task_hive/Tabs/HomeTab.dart';
 import 'package:task_hive/Tabs/ProfileTab.dart';
@@ -55,7 +56,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               foregroundColor:
                   MaterialStateProperty.all<Color>(MyColors.secondary)),
           child: const Icon(Icons.add),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return const AddTodoScreen();
+            }));
+          },
         ),
       ),
       bottomNavigationBar: Container(
