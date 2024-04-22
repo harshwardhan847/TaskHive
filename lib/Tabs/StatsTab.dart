@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class StatsTab extends StatelessWidget {
@@ -6,7 +7,10 @@ class StatsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text("Stats Tab"),
+      child: Text(
+        "Stats Tab",
+        style: TextStyle(color: Colors.white, fontSize: 40),
+      ),
     );
   }
 }

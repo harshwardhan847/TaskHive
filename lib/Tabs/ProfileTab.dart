@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class ProfileTab extends StatelessWidget {
@@ -5,7 +6,10 @@ class ProfileTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text("Profile Tab"),
+      child: Text(
+        "Profile Tab",
+        style: TextStyle(color: Colors.white, fontSize: 40),
+      ),
     );
   }
 }

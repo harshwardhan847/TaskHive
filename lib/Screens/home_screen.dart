@@ -43,7 +43,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   ];
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       floatingActionButton: SizedBox(
         width: 70,
@@ -132,7 +131,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         transitionBuilder: (child, animation) {
           return SlideTransition(
             position: Tween<Offset>(
-              begin: const Offset(1, 0),
+              begin: const Offset(-1, 0),
               end: Offset.zero,
             ).animate(animation),
             child: child,

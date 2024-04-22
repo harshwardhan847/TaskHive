@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:task_hive/Colors/colors.dart';
 
@@ -26,7 +27,10 @@ class BottomNavigationButton extends StatelessWidget {
           )),
           padding: MaterialStateProperty.all(
               const EdgeInsets.fromLTRB(20, 10, 20, 10))),
-      onPressed: onPressed,
+      onPressed: () {
+        onPressed!();
+        HapticFeedback.lightImpact();
+      },
       child: Row(
         children: [
           Icon(
