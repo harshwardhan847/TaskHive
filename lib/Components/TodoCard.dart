@@ -4,11 +4,26 @@ import 'package:task_hive/Colors/colors.dart';
 
 class TodoCard extends StatelessWidget {
   Map<String, dynamic> todo = {};
+  var priority = ["High", "Medium", "Low"];
   TodoCard({super.key, required this.todo});
+  Color getColorByPriority(priorityNo) {
+    switch (priorityNo) {
+      case 3:
+        return Colors.yellowAccent.shade200;
+      case 2:
+        return Colors.orangeAccent.shade200;
+      case 1:
+        return Colors.redAccent.shade200;
+      default:
+        return Colors.blueAccent.shade200;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     var title = todo['title'] as String;
+    var date = todo['date'] as String;
+    var priorityNo = todo['priority'] as int;
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(10),
@@ -45,11 +60,11 @@ class TodoCard extends StatelessWidget {
                 margin: const EdgeInsets.only(right: 5),
                 padding: const EdgeInsets.fromLTRB(10, 3, 10, 3),
                 decoration: BoxDecoration(
-                    color: Colors.redAccent.shade200,
-                    borderRadius: BorderRadius.all(Radius.circular(30))),
-                child: const Text(
-                  "High",
-                  style: TextStyle(color: Colors.black),
+                    color: getColorByPriority(priorityNo),
+                    borderRadius: const BorderRadius.all(Radius.circular(30))),
+                child: Text(
+                  priority[priorityNo - 1],
+                  style: const TextStyle(color: Colors.black),
                 ),
               ),
               Container(
@@ -68,17 +83,20 @@ class TodoCard extends StatelessWidget {
           const SizedBox(
             height: 15,
           ),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 Icons.calendar_today,
                 size: 20,
                 color: MyColors.secondary,
               ),
-              Text("14 oct 2024",
-                  style: TextStyle(
+              const SizedBox(
+                width: 4,
+              ),
+              Text(date,
+                  style: const TextStyle(
                       color: MyColors.secondary, fontWeight: FontWeight.w600)),
             ],
           ),

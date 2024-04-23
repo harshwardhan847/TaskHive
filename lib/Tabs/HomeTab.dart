@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:task_hive/Colors/colors.dart';
 import 'package:task_hive/Components/FilterButton.dart';
@@ -16,7 +17,8 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-  List<Map<String, dynamic>> todos = []; // Change to a list of maps
+  List<Map<String, dynamic>> todos = [];
+  bool loading = true;
 
   Future<void> getTodos() async {
     try {
@@ -26,19 +28,26 @@ class _HomeTabState extends State<HomeTab> {
           // .collection('users')
           // .doc(userId)
           .collection('todos')
+          .limit(5)
+          .orderBy("priority")
+          .orderBy("date", descending: false)
           .get();
 
       setState(() {
         // Clear existing todos
         todos.clear();
         // Iterate through documents and add them to the todos list
-        querySnapshot.docs.forEach((doc) {
-          print(doc.data());
-          todos.add(doc.data() as Map<String, dynamic>);
-        });
+        print(querySnapshot.docs.length);
+        for (var doc in querySnapshot.docs) {
+          todos.add(doc.data());
+        }
       });
     } catch (e) {
       print(e);
+    } finally {
+      setState(() {
+        loading = false;
+      });
     }
   }
 
@@ -92,13 +101,33 @@ class _HomeTabState extends State<HomeTab> {
               height: 20,
             ),
             // Uncomment the following code to display todos
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: todos.length,
-              itemBuilder: (context, index) {
-                return TodoCard(todo: todos[index]);
-              },
-            ),
+            loading
+                ? const Center(
+                    child: CircularProgressIndicator(
+                    color: MyColors.primary,
+                  ))
+                : todos.isNotEmpty
+                    ? ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: todos.length,
+                        itemBuilder: (context, index) {
+                          return TodoCard(todo: todos[index]);
+                        },
+                      )
+                    : const Center(
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 40),
+                            child: Text(
+                              "No Tasks",
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.white,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Colors.white),
+                            )),
+                      ),
           ],
         ),
       ),

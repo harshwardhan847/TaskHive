@@ -57,7 +57,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   MaterialStateProperty.all<Color>(MyColors.secondary)),
           child: const Icon(Icons.add),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) {
               return const AddTodoScreen();
             }));
           },
@@ -117,19 +118,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           'assets/images/LogoHeader.png',
           scale: 1.5,
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const LoginScreen()));
-              },
-              icon: Image.asset("assets/images/logout.png")),
-          IconButton(
-              onPressed: () {}, icon: Image.asset("assets/images/menu.png")),
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {
+        //         FirebaseAuth.instance.signOut();
+        //         Navigator.pushReplacement(
+        //             context,
+        //             MaterialPageRoute(
+        //                 builder: (context) => const LoginScreen()));
+        //       },
+        //       icon: Image.asset("assets/images/logout.png")),
+        //   IconButton(
+        //       onPressed: () {}, icon: Image.asset("assets/images/menu.png")),
+        // ],
       ),
       backgroundColor: MyColors.secondary,
       body: AnimatedSwitcher(

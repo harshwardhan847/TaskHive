@@ -4,10 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:task_hive/Colors/colors.dart';
 import 'package:task_hive/Components/elevated_button.dart';
 import 'package:task_hive/Components/text_button.dart';
 import 'package:task_hive/Components/text_input.dart';
+import 'package:task_hive/Screens/home_screen.dart';
 
 class AddTodoScreen extends StatefulWidget {
   const AddTodoScreen({super.key});
@@ -37,21 +39,26 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
       "description": descriptionController.text,
       "date": dateController.text,
       "timeTaken": timeTakenController.text,
-      "priority": selectedValue,
+      "priority": selectedValue == "High"
+          ? 1
+          : selectedValue == "Medium"
+              ? 2
+              : 3,
       "isCompleted": false,
       "userId": userId,
       // "score": 0, TODO add score to the todo
     };
 
     await db.collection("todos").add(todo);
-    Navigator.pop(context);
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+      return const HomePage();
+    }));
   }
 
   @override
   void initState() {
-    // TODO: implement initState
-    dateController.text =
-        DateTime(now.year, now.month, now.day + 1).toString().split(" ")[0];
+    dateController.text = DateFormat("dd-MM-yyyy")
+        .format(DateTime(now.year, now.month, now.day + 1));
     super.initState();
   }
 
@@ -65,7 +72,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
           lastDate: DateTime(2100));
       if (pickedDate != null) {
         setState(() {
-          dateController.text = pickedDate.toString().split(" ")[0];
+          dateController.text = DateFormat("dd-MM-yyyy").format(pickedDate);
         });
       }
     }
