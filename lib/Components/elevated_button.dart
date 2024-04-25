@@ -3,7 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'package:task_hive/Colors/colors.dart';
 
 class MyElevatedButton extends StatelessWidget {
-  MyElevatedButton({super.key, this.text = "", this.onPressed});
+  MyElevatedButton(
+      {super.key, this.text = "", this.onPressed, this.secondary = false});
+  bool secondary;
   final String text;
   void Function()? onPressed;
   @override
@@ -12,7 +14,8 @@ class MyElevatedButton extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
           style: ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(MyColors.secondary),
+              backgroundColor: MaterialStatePropertyAll(
+                  !secondary ? MyColors.primary : MyColors.secondary),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -22,7 +25,9 @@ class MyElevatedButton extends StatelessWidget {
           onPressed: onPressed,
           child: Text(
             text,
-            style: const TextStyle(fontSize: 20, color: Colors.white),
+            style: TextStyle(
+                fontSize: 20,
+                color: secondary ? Colors.white : MyColors.secondary),
           )),
     );
   }

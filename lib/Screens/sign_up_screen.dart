@@ -155,6 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 20,
                   ),
                   MyElevatedButton(
+                    secondary: true,
                     onPressed: () {
                       signUp(nameController.text, emailController.text,
                           passwordController.text);

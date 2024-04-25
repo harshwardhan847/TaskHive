@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:task_hive/Colors/colors.dart';
-import 'package:task_hive/Components/FilterButton.dart';
+import 'package:task_hive/Components/BasicStats.dart';
 import 'package:task_hive/Components/TodoCard.dart';
 
 class HomeTab extends StatefulWidget {
@@ -28,9 +26,9 @@ class _HomeTabState extends State<HomeTab> {
           // .collection('users')
           // .doc(userId)
           .collection('todos')
-          .limit(5)
-          .orderBy("priority")
+          .where("userId", isEqualTo: userId)
           .orderBy("date", descending: false)
+          .limit(5)
           .get();
 
       setState(() {
@@ -81,26 +79,7 @@ class _HomeTabState extends State<HomeTab> {
             const SizedBox(
               height: 20,
             ),
-            SizedBox(
-              width: double.infinity,
-              height: 35,
-              child: ListView.separated(
-                separatorBuilder: (context, index) => const SizedBox(
-                  width: 10,
-                ),
-                scrollDirection: Axis.horizontal,
-                itemCount: 10,
-                itemBuilder: (context, index) => FilterButton(
-                  text: "Completed",
-                  onPressed: () {},
-                  number: index + 1,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            // Uncomment the following code to display todos
+            const BasicStats(),
             loading
                 ? const Center(
                     child: CircularProgressIndicator(

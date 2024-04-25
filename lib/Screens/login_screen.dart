@@ -130,6 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 20,
                   ),
                   MyElevatedButton(
+                    secondary: true,
                     onPressed: () {
                       saveForm(context, emailController.text,
                           passwordController.text);

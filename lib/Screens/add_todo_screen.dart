@@ -199,6 +199,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                   height: 20,
                 ),
                 MyElevatedButton(
+                  secondary: true,
                   text: "Add Todo",
                   onPressed: addTodo,
                 ),
