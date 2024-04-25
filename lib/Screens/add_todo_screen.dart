@@ -44,7 +44,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
           : selectedValue == "Medium"
               ? 2
               : 3,
-      "isCompleted": false,
+      "status": "onHold",
       "userId": userId,
       // "score": 0, TODO add score to the todo
     };
@@ -79,6 +79,13 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const HomePage()));
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
         backgroundColor: MyColors.primary,
         title: const Text(
           "Add Todo",

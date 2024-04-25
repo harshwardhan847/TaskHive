@@ -1,11 +1,32 @@
+import 'dart:ui';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:task_hive/Colors/colors.dart';
 
-class TodoCard extends StatelessWidget {
+class TodoCard extends StatefulWidget {
   Map<String, dynamic> todo = {};
+  Function deleteTodo;
+
+  TodoCard({super.key, required this.todo, required this.deleteTodo});
+
+  @override
+  State<TodoCard> createState() => _TodoCardState();
+}
+
+class _TodoCardState extends State<TodoCard> {
   var priority = ["High", "Medium", "Low"];
-  TodoCard({super.key, required this.todo});
+  var statusValue = {
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "onHold": "On Hold",
+    "inReview": "In Review",
+  };
+
   Color getColorByPriority(priorityNo) {
     switch (priorityNo) {
       case 3:
@@ -21,9 +42,11 @@ class TodoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var title = todo['title'] as String;
-    var date = todo['date'] as String;
-    var priorityNo = todo['priority'] as int;
+    var title = widget.todo['title'] as String;
+    var date = widget.todo['date'] as String;
+    var status = widget.todo['status'] as String;
+    var priorityNo = widget.todo['priority'] as int;
+    var todoId = widget.todo['id'];
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(10),
@@ -38,20 +61,56 @@ class TodoCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(title,
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: MyColors.secondary, fontWeight: FontWeight.w600)),
               SizedBox(
-                width: 40,
-                height: 30,
-                child: IconButton(
-                  alignment: Alignment.center,
-                  style: const ButtonStyle(
-                      // backgroundColor: MaterialStatePropertyAll(Colors.red),
-                      padding: MaterialStatePropertyAll(EdgeInsets.all(0))),
-                  onPressed: () {},
-                  icon: Image.asset("assets/images/CardMenu.png"),
-                ),
-              )
+                  width: 40,
+                  height: 30,
+                  child: PopupMenuButton(
+                    color: MyColors.secondary,
+                    icon: Image.asset(
+                      "assets/images/CardMenu.png",
+                    ),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        onTap: () {
+                          widget.deleteTodo();
+                        },
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Delete",
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Edit",
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  )),
             ],
           ),
           Row(
@@ -71,11 +130,11 @@ class TodoCard extends StatelessWidget {
                 margin: const EdgeInsets.only(right: 15),
                 padding: const EdgeInsets.fromLTRB(10, 3, 10, 3),
                 decoration: BoxDecoration(
-                    color: Colors.greenAccent.shade200,
+                    color: getStatusColor(status),
                     borderRadius: const BorderRadius.all(Radius.circular(30))),
-                child: const Text(
-                  "On Track",
-                  style: TextStyle(color: Colors.black),
+                child: Text(
+                  statusValue[status]!,
+                  style: const TextStyle(color: Colors.black),
                 ),
               )
             ],
@@ -95,13 +154,28 @@ class TodoCard extends StatelessWidget {
               const SizedBox(
                 width: 4,
               ),
-              Text(date,
-                  style: const TextStyle(
-                      color: MyColors.secondary, fontWeight: FontWeight.w600)),
+              Text(
+                date,
+                style: const TextStyle(
+                    color: MyColors.secondary, fontWeight: FontWeight.w600),
+              ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  getStatusColor(status) {
+    switch (status) {
+      case "completed":
+        return Colors.greenAccent.shade200;
+      case "inProgress":
+        return Colors.yellowAccent.shade100;
+      case "inReview":
+        return Colors.indigoAccent.shade100;
+      case "onHold":
+        return Colors.redAccent.shade100;
+    }
   }
 }

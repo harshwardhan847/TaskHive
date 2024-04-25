@@ -17,13 +17,14 @@ class TasksTab extends StatefulWidget {
 }
 
 class _TasksTabState extends State<TasksTab> {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> todos = [];
   bool loading = true;
 
   Future<void> getTodos() async {
     try {
       final userId = FirebaseAuth.instance.currentUser!.uid;
-    
+
       final querySnapshot = await FirebaseFirestore.instance
           .collection('todos')
           .where("userId", isEqualTo: userId)
@@ -36,7 +37,7 @@ class _TasksTabState extends State<TasksTab> {
         // Iterate through documents and add them to the todos list
         print(querySnapshot.docs.length);
         for (var doc in querySnapshot.docs) {
-          todos.add(doc.data());
+          todos.add({...doc.data(), "id": doc.id});
         }
       });
     } catch (e) {
@@ -98,7 +99,17 @@ class _TasksTabState extends State<TasksTab> {
                         shrinkWrap: true,
                         itemCount: todos.length,
                         itemBuilder: (context, index) {
-                          return TodoCard(todo: todos[index]);
+                          return TodoCard(
+                            todo: todos[index],
+                            deleteTodo: () async {
+                              print("Deleted from tasks tab");
+                              await firestore
+                                  .collection('todos')
+                                  .doc(todos[index]['id'])
+                                  .delete();
+                              await getTodos();
+                            },
+                          );
                         },
                       )
                     : const Center(

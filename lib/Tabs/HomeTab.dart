@@ -15,6 +15,7 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> todos = [];
   bool loading = true;
 
@@ -37,7 +38,7 @@ class _HomeTabState extends State<HomeTab> {
         // Iterate through documents and add them to the todos list
         print(querySnapshot.docs.length);
         for (var doc in querySnapshot.docs) {
-          todos.add(doc.data());
+          todos.add({...doc.data(), "id": doc.id});
         }
       });
     } catch (e) {
@@ -79,7 +80,9 @@ class _HomeTabState extends State<HomeTab> {
             const SizedBox(
               height: 20,
             ),
-            const BasicStats(),
+            const BasicStats(
+              
+            ),
             loading
                 ? const Center(
                     child: CircularProgressIndicator(
@@ -91,7 +94,18 @@ class _HomeTabState extends State<HomeTab> {
                         shrinkWrap: true,
                         itemCount: todos.length,
                         itemBuilder: (context, index) {
-                          return TodoCard(todo: todos[index]);
+                          return TodoCard(
+                            todo: todos[index],
+                            deleteTodo: () async {
+                              setState(() {});
+                              await firestore
+                                  .collection('todos')
+                                  .doc(todos[index]['id'])
+                                  .delete();
+
+                              await getTodos();
+                            },
+                          );
                         },
                       )
                     : const Center(

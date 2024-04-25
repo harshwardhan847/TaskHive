@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:task_hive/Colors/colors.dart';
@@ -23,28 +25,38 @@ class _BasicStatsState extends State<BasicStats> {
     setCompletedTasks();
   }
 
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+
   Future<void> setCompletedTasks() async {
     final completedSnapshot = await FirebaseFirestore.instance
         .collection("todos")
-        .where("completed", isEqualTo: true)
+        .where("userId", isEqualTo: userId)
+        .where("status", isEqualTo: "completed")
+        .count()
         .get();
     final inProgressSnapshot = await FirebaseFirestore.instance
         .collection("todos")
-        .where("completed", isEqualTo: true)
+        .where("userId", isEqualTo: userId)
+        .where("status", isEqualTo: "inProgress")
+        .count()
         .get();
     final onHoldSnapshot = await FirebaseFirestore.instance
         .collection("todos")
-        .where("completed", isEqualTo: true)
+        .where("userId", isEqualTo: userId)
+        .where("status", isEqualTo: "onHold")
+        .count()
         .get();
     final inReviewSnapshot = await FirebaseFirestore.instance
         .collection("todos")
-        .where("completed", isEqualTo: true)
+        .where("userId", isEqualTo: userId)
+        .where("status", isEqualTo: "inReview")
+        .count()
         .get();
     setState(() {
-      completed = completedSnapshot.docs.length.toString();
-      inReview = inReviewSnapshot.docs.length.toString();
-      onHold = onHoldSnapshot.docs.length.toString();
-      inProgress = inProgressSnapshot.docs.length.toString();
+      completed = completedSnapshot.count.toString();
+      inReview = inReviewSnapshot.count.toString();
+      onHold = onHoldSnapshot.count.toString();
+      inProgress = inProgressSnapshot.count.toString();
     });
   }
 
