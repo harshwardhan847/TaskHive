@@ -7,6 +7,8 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:task_hive/Colors/colors.dart';
+import 'package:task_hive/Screens/add_todo_screen.dart';
+import 'package:task_hive/Screens/login_screen.dart';
 
 class TodoCard extends StatefulWidget {
   Map<String, dynamic> todo = {};
@@ -92,8 +94,16 @@ class _TodoCardState extends State<TodoCard> {
                           ],
                         ),
                       ),
-                      const PopupMenuItem(
-                        child: Row(
+                      PopupMenuItem(
+                        onTap: () {
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) {
+                            return AddTodoScreen(
+                              todo: widget.todo,
+                            );
+                          }));
+                        },
+                        child: const Row(
                           children: [
                             Icon(
                               Icons.edit,

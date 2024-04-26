@@ -12,7 +12,8 @@ import 'package:task_hive/Components/text_input.dart';
 import 'package:task_hive/Screens/home_screen.dart';
 
 class AddTodoScreen extends StatefulWidget {
-  const AddTodoScreen({super.key});
+  const AddTodoScreen({super.key, this.todo});
+  final Map? todo;
 
   @override
   State<AddTodoScreen> createState() => _AddTodoScreenState();
@@ -55,11 +56,21 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
     }));
   }
 
+  var priority = ["High", "Medium", "Low"];
+
   @override
   void initState() {
+    print(widget.todo);
     dateController.text = DateFormat("dd-MM-yyyy")
         .format(DateTime(now.year, now.month, now.day + 1));
     super.initState();
+    if (widget.todo != null) {
+      titleController.text = widget.todo?['title'];
+      descriptionController.text = widget.todo?['description'];
+      dateController.text = widget.todo?['date'];
+      timeTakenController.text = widget.todo?['timeTaken'];
+      selectedValue = priority[widget.todo?['priority']];
+    }
   }
 
   @override
@@ -75,6 +86,34 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
           dateController.text = DateFormat("dd-MM-yyyy").format(pickedDate);
         });
       }
+    }
+
+    void updateTodo() async {
+      final isValid = _form.currentState!.validate();
+      if (!isValid) {
+        return;
+      }
+      final todoId = widget.todo?['id'];
+      final userId = FirebaseAuth.instance.currentUser!.uid;
+      final todo = <String, dynamic>{
+        "title": titleController.text,
+        "description": descriptionController.text,
+        "date": dateController.text,
+        "timeTaken": timeTakenController.text,
+        "priority": selectedValue == "High"
+            ? 1
+            : selectedValue == "Medium"
+                ? 2
+                : 3,
+        "status": "onHold",
+        "userId": userId,
+        // "score": 0, TODO add score to the todo
+      };
+
+      await db.collection("todos").doc(todoId).update(todo);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return const HomePage();
+      }));
     }
 
     return Scaffold(
@@ -171,7 +210,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                     ),
                     Container(
                       height: 60,
-                      padding: EdgeInsets.fromLTRB(3, 0, 3, 0),
+                      padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: MyColors.secondary),
@@ -205,11 +244,17 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                MyElevatedButton(
-                  secondary: true,
-                  text: "Add Todo",
-                  onPressed: addTodo,
-                ),
+                widget.todo == null
+                    ? MyElevatedButton(
+                        secondary: true,
+                        text: "Add Todo",
+                        onPressed: addTodo,
+                      )
+                    : MyElevatedButton(
+                        secondary: true,
+                        text: "Update Todo",
+                        onPressed: updateTodo,
+                      ),
               ],
             ),
           ),
