@@ -21,6 +21,7 @@ class TodoCard extends StatefulWidget {
 }
 
 class _TodoCardState extends State<TodoCard> {
+  FirebaseFirestore db = FirebaseFirestore.instance;
   var priority = ["High", "Medium", "Low"];
   var statusValue = {
     "completed": "Completed",
@@ -28,6 +29,18 @@ class _TodoCardState extends State<TodoCard> {
     "onHold": "On Hold",
     "inReview": "In Review",
   };
+  int getIndexByPriority(priorityNo) {
+    switch (priorityNo) {
+      case "High":
+        return 1;
+      case "Medium":
+        return 2;
+      case "Low":
+        return 3;
+      default:
+        return 1;
+    }
+  }
 
   Color getColorByPriority(priorityNo) {
     switch (priorityNo) {
@@ -40,6 +53,16 @@ class _TodoCardState extends State<TodoCard> {
       default:
         return Colors.blueAccent.shade200;
     }
+  }
+
+  String currentStatus = "";
+  int currentPriorityNo = 1;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    currentPriorityNo = widget.todo['priority'];
+    currentStatus = widget.todo['status'];
   }
 
   @override
@@ -125,28 +148,75 @@ class _TodoCardState extends State<TodoCard> {
           ),
           Row(
             children: [
-              Container(
-                margin: const EdgeInsets.only(right: 5),
-                padding: const EdgeInsets.fromLTRB(10, 3, 10, 3),
-                decoration: BoxDecoration(
-                    color: getColorByPriority(priorityNo),
-                    borderRadius: const BorderRadius.all(Radius.circular(30))),
-                child: Text(
-                  priority[priorityNo - 1],
-                  style: const TextStyle(color: Colors.black),
+              PopupMenuButton(
+                child: Container(
+                  margin: const EdgeInsets.only(right: 5),
+                  padding: const EdgeInsets.fromLTRB(10, 3, 10, 3),
+                  decoration: BoxDecoration(
+                      color: getColorByPriority(currentPriorityNo),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(30))),
+                  child: Text(
+                    priority[currentPriorityNo - 1],
+                    style: const TextStyle(color: Colors.black),
+                  ),
                 ),
+                itemBuilder: (context) => priority
+                    .map(
+                      (e) => PopupMenuItem(
+                        onTap: () async {
+                          print(e);
+                          setState(() {
+                            currentPriorityNo = getIndexByPriority(e);
+                          });
+
+                          await db
+                              .collection("todos")
+                              .doc(todoId)
+                              .update({"priority": currentPriorityNo});
+                          widget.todo["priority"] = currentPriorityNo;
+                        },
+                        child: Text(
+                          e,
+                        ),
+                      ),
+                    )
+                    .toList(),
               ),
-              Container(
-                margin: const EdgeInsets.only(right: 15),
-                padding: const EdgeInsets.fromLTRB(10, 3, 10, 3),
-                decoration: BoxDecoration(
-                    color: getStatusColor(status),
-                    borderRadius: const BorderRadius.all(Radius.circular(30))),
-                child: Text(
-                  statusValue[status]!,
-                  style: const TextStyle(color: Colors.black),
+              PopupMenuButton(
+                child: Container(
+                  margin: const EdgeInsets.only(right: 5),
+                  padding: const EdgeInsets.fromLTRB(10, 3, 10, 3),
+                  decoration: BoxDecoration(
+                      color: getColorByStatus(currentStatus),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(30))),
+                  child: Text(
+                    currentStatus,
+                    style: const TextStyle(color: Colors.black),
+                  ),
                 ),
-              )
+                itemBuilder: (context) => statusValue.entries
+                    .map(
+                      (e) => PopupMenuItem(
+                        onTap: () async {
+                          setState(() {
+                            currentStatus = e.key;
+                          });
+
+                          await db
+                              .collection("todos")
+                              .doc(todoId)
+                              .update({"status": currentStatus});
+                          widget.todo["status"] = currentStatus;
+                        },
+                        child: Text(
+                          e.value,
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
             ],
           ),
           const SizedBox(

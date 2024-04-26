@@ -56,8 +56,15 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
     }));
   }
 
-  var priority = ["High", "Medium", "Low"];
-
+  var statuses = ["Completed", "In Progress", "On Hold", "In Review"];
+  var statusValue = {
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "onHold": "On Hold",
+    "inReview": "In Review",
+  };
+  var priority = ["", "High", "Medium", "Low"];
+  String currentStatus = "";
   @override
   void initState() {
     print(widget.todo);
@@ -70,6 +77,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
       dateController.text = widget.todo?['date'];
       timeTakenController.text = widget.todo?['timeTaken'];
       selectedValue = priority[widget.todo?['priority']];
+      currentStatus = widget.todo?['status'];
     }
   }
 
@@ -105,8 +113,9 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
             : selectedValue == "Medium"
                 ? 2
                 : 3,
-        "status": "onHold",
+        "status": currentStatus,
         "userId": userId,
+
         // "score": 0, TODO add score to the todo
       };
 
@@ -238,9 +247,39 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                           }
                         },
                       ),
-                    )
+                    ),
                   ],
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(children: [
+                  PopupMenuButton(
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 5),
+                        padding: const EdgeInsets.fromLTRB(10, 3, 10, 3),
+                        decoration: BoxDecoration(
+                            color: getColorByStatus(currentStatus),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(30))),
+                        child: Text(
+                          currentStatus,
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                      ),
+                      itemBuilder: (context) => statusValue.entries
+                          .map((e) => PopupMenuItem(
+                                onTap: () {
+                                  setState(() {
+                                    currentStatus = e.key;
+                                  });
+                                },
+                                child: Text(
+                                  e.value,
+                                ),
+                              ))
+                          .toList())
+                ]),
                 const SizedBox(
                   height: 20,
                 ),
@@ -261,5 +300,18 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
         ),
       ),
     );
+  }
+}
+
+getColorByStatus(status) {
+  switch (status) {
+    case "completed":
+      return Colors.greenAccent.shade200;
+    case "inProgress":
+      return Colors.yellowAccent.shade100;
+    case "inReview":
+      return Colors.indigoAccent.shade100;
+    case "onHold":
+      return Colors.redAccent.shade100;
   }
 }

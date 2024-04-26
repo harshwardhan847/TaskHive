@@ -36,7 +36,6 @@ class _HomeTabState extends State<HomeTab> {
         // Clear existing todos
         todos.clear();
         // Iterate through documents and add them to the todos list
-        print(querySnapshot.docs.length);
         for (var doc in querySnapshot.docs) {
           todos.add({...doc.data(), "id": doc.id});
         }
@@ -80,9 +79,7 @@ class _HomeTabState extends State<HomeTab> {
             const SizedBox(
               height: 20,
             ),
-            const BasicStats(
-              
-            ),
+            const BasicStats(),
             loading
                 ? const Center(
                     child: CircularProgressIndicator(
