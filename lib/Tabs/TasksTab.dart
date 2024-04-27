@@ -21,15 +21,24 @@ class _TasksTabState extends State<TasksTab> {
   List<Map<String, dynamic>> todos = [];
   bool loading = true;
 
-  Future<void> getTodos() async {
+  Future<void> getTodos(filter, filterValue) async {
     try {
       final userId = FirebaseAuth.instance.currentUser!.uid;
-
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('todos')
-          .where("userId", isEqualTo: userId)
-          .orderBy("date", descending: false)
-          .get();
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot;
+      if (filter != null) {
+        querySnapshot = await FirebaseFirestore.instance
+            .collection('todos')
+            .where("userId", isEqualTo: userId)
+            .where(filter, isEqualTo: filterValue)
+            .orderBy("date", descending: false)
+            .get();
+      } else {
+        querySnapshot = await FirebaseFirestore.instance
+            .collection('todos')
+            .where("userId", isEqualTo: userId)
+            .orderBy("date", descending: false)
+            .get();
+      }
 
       setState(() {
         // Clear existing todos
@@ -52,7 +61,7 @@ class _TasksTabState extends State<TasksTab> {
   @override
   void initState() {
     super.initState();
-    getTodos();
+    getTodos(null, null);
   }
 
   @override
@@ -69,21 +78,52 @@ class _TasksTabState extends State<TasksTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              width: double.infinity,
-              height: 35,
-              child: ListView.separated(
-                separatorBuilder: (context, index) => const SizedBox(
-                  width: 10,
-                ),
-                scrollDirection: Axis.horizontal,
-                itemCount: 10,
-                itemBuilder: (context, index) => FilterButton(
-                  text: "Completed",
-                  onPressed: () {},
-                  number: index + 1,
-                ),
-              ),
-            ),
+                width: double.infinity,
+                height: 35,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    FilterButton(
+                      text: "Completed",
+                      onPressed: () {
+                        getTodos("status", "completed");
+                      },
+                      number: 2,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    FilterButton(
+                      text: "Completed",
+                      onPressed: () {},
+                      number: 2,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    FilterButton(
+                      text: "Completed",
+                      onPressed: () {},
+                      number: 2,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    FilterButton(
+                      text: "Completed",
+                      onPressed: () {},
+                      number: 2,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    FilterButton(
+                      text: "Completed",
+                      onPressed: () {},
+                      number: 2,
+                    ),
+                  ],
+                )),
             const SizedBox(
               height: 20,
             ),
@@ -107,7 +147,7 @@ class _TasksTabState extends State<TasksTab> {
                                   .collection('todos')
                                   .doc(todos[index]['id'])
                                   .delete();
-                              await getTodos();
+                              await getTodos(null, null);
                             },
                           );
                         },

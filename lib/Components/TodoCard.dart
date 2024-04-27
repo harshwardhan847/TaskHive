@@ -11,10 +11,10 @@ import 'package:task_hive/Screens/add_todo_screen.dart';
 import 'package:task_hive/Screens/login_screen.dart';
 
 class TodoCard extends StatefulWidget {
-  Map<String, dynamic> todo = {};
-  Function deleteTodo;
+  final Map<String, dynamic> todo;
+  final Function deleteTodo;
 
-  TodoCard({super.key, required this.todo, required this.deleteTodo});
+  const TodoCard({super.key, required this.todo, required this.deleteTodo});
 
   @override
   State<TodoCard> createState() => _TodoCardState();
