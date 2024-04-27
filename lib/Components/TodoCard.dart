@@ -119,12 +119,16 @@ class _TodoCardState extends State<TodoCard> {
                       ),
                       PopupMenuItem(
                         onTap: () {
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (context) {
-                            return AddTodoScreen(
-                              todo: widget.todo,
-                            );
-                          }));
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return AddTodoScreen(
+                                  todo: widget.todo,
+                                );
+                              },
+                            ),
+                          );
                         },
                         child: const Row(
                           children: [
@@ -153,11 +157,11 @@ class _TodoCardState extends State<TodoCard> {
                   margin: const EdgeInsets.only(right: 5),
                   padding: const EdgeInsets.fromLTRB(10, 3, 10, 3),
                   decoration: BoxDecoration(
-                      color: getColorByPriority(currentPriorityNo),
+                      color: getColorByPriority(widget.todo['priority']),
                       borderRadius:
                           const BorderRadius.all(Radius.circular(30))),
                   child: Text(
-                    priority[currentPriorityNo - 1],
+                    priority[widget.todo['priority'] - 1],
                     style: const TextStyle(color: Colors.black),
                   ),
                 ),
@@ -165,16 +169,14 @@ class _TodoCardState extends State<TodoCard> {
                     .map(
                       (e) => PopupMenuItem(
                         onTap: () async {
-                          print(e);
                           setState(() {
                             currentPriorityNo = getIndexByPriority(e);
+                            widget.todo["priority"] = getIndexByPriority(e);
                           });
-
                           await db
                               .collection("todos")
                               .doc(todoId)
                               .update({"priority": currentPriorityNo});
-                          widget.todo["priority"] = currentPriorityNo;
                         },
                         child: Text(
                           e,
@@ -188,11 +190,11 @@ class _TodoCardState extends State<TodoCard> {
                   margin: const EdgeInsets.only(right: 5),
                   padding: const EdgeInsets.fromLTRB(10, 3, 10, 3),
                   decoration: BoxDecoration(
-                      color: getColorByStatus(currentStatus),
+                      color: getColorByStatus(widget.todo['status']),
                       borderRadius:
                           const BorderRadius.all(Radius.circular(30))),
                   child: Text(
-                    currentStatus,
+                    widget.todo['status'],
                     style: const TextStyle(color: Colors.black),
                   ),
                 ),
@@ -202,13 +204,13 @@ class _TodoCardState extends State<TodoCard> {
                         onTap: () async {
                           setState(() {
                             currentStatus = e.key;
+                            widget.todo["status"] = e.key;
                           });
 
                           await db
                               .collection("todos")
                               .doc(todoId)
                               .update({"status": currentStatus});
-                          widget.todo["status"] = currentStatus;
                         },
                         child: Text(
                           e.value,

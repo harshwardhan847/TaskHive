@@ -40,7 +40,7 @@ class FilterButton extends StatelessWidget {
                 width: 5,
               ),
               Container(
-                padding: EdgeInsets.all(1),
+                padding: const EdgeInsets.all(1),
                 width: 20,
                 height: 20,
                 decoration: const BoxDecoration(
