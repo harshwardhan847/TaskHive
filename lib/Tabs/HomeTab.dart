@@ -24,8 +24,6 @@ class _HomeTabState extends State<HomeTab> {
       final userId = FirebaseAuth.instance.currentUser!.uid;
       print(userId);
       final querySnapshot = await FirebaseFirestore.instance
-          // .collection('users')
-          // .doc(userId)
           .collection('todos')
           .where("userId", isEqualTo: userId)
           .orderBy("date", descending: false)
@@ -41,6 +39,7 @@ class _HomeTabState extends State<HomeTab> {
         }
       });
     } catch (e) {
+      print("Error in fetching todos");
       print(e);
     } finally {
       setState(() {

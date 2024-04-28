@@ -20,8 +20,13 @@ class _TasksTabState extends State<TasksTab> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> todos = [];
   bool loading = true;
+  int activeFilter = 0;
 
   Future<void> getTodos(filter, filterValue) async {
+    
+    setState(() {
+      loading = true;
+    });
     try {
       final userId = FirebaseAuth.instance.currentUser!.uid;
       final QuerySnapshot<Map<String, dynamic>> querySnapshot;
@@ -44,7 +49,7 @@ class _TasksTabState extends State<TasksTab> {
         // Clear existing todos
         todos.clear();
         // Iterate through documents and add them to the todos list
-        print(querySnapshot.docs.length);
+        //print(querySnapshot.docs.length);
         for (var doc in querySnapshot.docs) {
           todos.add({...doc.data(), "id": doc.id});
         }
@@ -66,10 +71,6 @@ class _TasksTabState extends State<TasksTab> {
 
   @override
   Widget build(BuildContext context) {
-    String? getUserName() {
-      return FirebaseAuth.instance.currentUser?.displayName;
-    }
-
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
@@ -85,42 +86,84 @@ class _TasksTabState extends State<TasksTab> {
                   children: [
                     FilterButton(
                       text: "Completed",
-                      onPressed: () {
-                        getTodos("status", "completed");
+                      onPressed: () async {
+                        if (activeFilter == 1) {
+                          await getTodos(null, null);
+                          setState(() {
+                            activeFilter = 0;
+                          });
+                        } else {
+                          setState(() {
+                            activeFilter = 1;
+                          });
+                          await getTodos("status", "completed");
+                        }
                       },
-                      number: 2,
+                      filterIndex: 1,
+                      currentFilter: activeFilter,
                     ),
                     const SizedBox(
                       width: 10,
                     ),
                     FilterButton(
-                      text: "Completed",
-                      onPressed: () {},
-                      number: 2,
+                      text: "In Review",
+                      onPressed: () async {
+                        if (activeFilter == 2) {
+                          await getTodos(null, null);
+                          setState(() {
+                            activeFilter = 0;
+                          });
+                        } else {
+                          setState(() {
+                            activeFilter = 2;
+                          });
+                          await getTodos("status", "inReview");
+                        }
+                      },
+                      currentFilter: activeFilter,
+                      filterIndex: 2,
                     ),
                     const SizedBox(
                       width: 10,
                     ),
                     FilterButton(
-                      text: "Completed",
-                      onPressed: () {},
-                      number: 2,
+                      text: "On Hold",
+                      onPressed: () async {
+                        if (activeFilter == 3) {
+                          await getTodos(null, null);
+                          setState(() {
+                            activeFilter = 0;
+                          });
+                        } else {
+                          setState(() {
+                            activeFilter = 3;
+                          });
+                          await getTodos("status", "onHold");
+                        }
+                      },
+                      currentFilter: activeFilter,
+                      filterIndex: 3,
                     ),
                     const SizedBox(
                       width: 10,
                     ),
                     FilterButton(
-                      text: "Completed",
-                      onPressed: () {},
-                      number: 2,
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    FilterButton(
-                      text: "Completed",
-                      onPressed: () {},
-                      number: 2,
+                      text: "In Progress",
+                      onPressed: () async {
+                        if (activeFilter == 4) {
+                          await getTodos(null, null);
+                          setState(() {
+                            activeFilter = 0;
+                          });
+                        } else {
+                          setState(() {
+                            activeFilter = 4;
+                          });
+                          await getTodos("status", "inProgress");
+                        }
+                      },
+                      currentFilter: activeFilter,
+                      filterIndex: 4,
                     ),
                   ],
                 )),

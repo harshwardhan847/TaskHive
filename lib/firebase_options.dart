@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'taskhiveofficial.appspot.com',
     measurementId: 'G-SEZWHLYXSY',
   );
+
 }
